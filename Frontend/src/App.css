@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+/* ::-webkit-scrollbar{
+    width: 10px;
+    height: 100vh;
+    background-color: #364153;
+}
+::-webkit-scrollbar-button{
+
+}
+::-webkit-scrollbar-corner{
+
+}
+::-webkit-scrollbar-thumb{
+    background-color: #125398;
+    border-radius: 10px;
+    
+}
+::-webkit-scrollbar-track{
+    
+
+}
+::-webkit-scrollbar-track-piece{
+} */
