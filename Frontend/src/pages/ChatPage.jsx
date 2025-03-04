@@ -6,9 +6,11 @@ import Chat from "../components/Chats";
 function ChatPage() {
   return (
     <>
-      <Navbar />
-      <Sidebar />
-      <Chat />
+      <div className="antialiased bg-gray-50 dark:bg-gray-900">
+        <Navbar />
+        <Sidebar />
+        <Chat />
+      </div>
     </>
   );
 }
