@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.SchemaType(
+const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
@@ -10,7 +10,7 @@ const userSchema = new mongoose.SchemaType(
     },
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
       lowercase: true,
     },

@@ -1,8 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import dotenv from "dotenv";
 
-export const registerUser = async (req, res) => {
+dotenv.config();
+
+const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
@@ -22,7 +25,7 @@ export const registerUser = async (req, res) => {
   }
 };
 
-export const loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -45,3 +48,7 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export { registerUser, loginUser };
+// Compare this snippet from Backend/models/user.model.js:
+// import mongoose from "mongoose";
