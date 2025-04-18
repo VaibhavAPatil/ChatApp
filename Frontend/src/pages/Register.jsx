@@ -4,6 +4,7 @@ import axios from "../config/axios.config"; // Import centralized API config
 
 const Register = () => {
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -33,6 +34,7 @@ const Register = () => {
 
     try {
       const { data } = await axios.post("/auth/register", {
+        username: formData.username,
         email: formData.email,
         password: formData.password,
       });
@@ -44,6 +46,8 @@ const Register = () => {
         error.response?.data?.message || "Registration failed. Try again."
       );
     }
+
+    console.log("Form Data:", formData); // Log form data for debugging
   };
 
   return (
@@ -73,6 +77,26 @@ const Register = () => {
             {error && <p className="text-red-500">{error}</p>}
 
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              {/* ✅ usernmae Input */}
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Username
+                </label>
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="username"
+                  required
+                />
+              </div>
+
               {/* ✅ Email Input */}
               <div>
                 <label
