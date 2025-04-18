@@ -23,7 +23,7 @@ const Login = () => {
     try {
       const { data } = await axios.post("/auth/login", formData);
       localStorage.setItem("token", data.token); // Store token
-      navigate("/chats"); // Redirect to chats
+      navigate("/chat"); // Redirect to chats
     } catch (error) {
       setError(error.response?.data?.message || "Login failed.");
     }
