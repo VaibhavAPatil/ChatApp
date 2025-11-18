@@ -10,4 +10,4 @@ const grouSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Group = mongoose.model("Group", groupSchema);
+export default mongoose.model("Group", groupSchema);
