@@ -2,11 +2,20 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    fullNane: {
+      type: String,
+      required: true,
+    },
     username: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
+    },
+    mobileNo: {
+      type: Number,
+      required: true,
+      unique: true,
     },
     email: {
       type: String,
@@ -18,9 +27,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
+    },
     profilePic: {
       type: String,
-      default: "Hey There! I am using ChatApp",
+      default: "",
     },
     isOnline: {
       type: Boolean,
@@ -30,4 +44,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+export const User = mongoose.model("User", userSchema);
