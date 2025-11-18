@@ -1,18 +1,18 @@
 import React from "react";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import Chat from "../components/Chats";
+import NavbarChat from "../components/chat/Navbar.chat";
+import SidebarChat from "../components/chat/Sidebar.chat";
+import ChatBoxChat from "../components/chat/ChatBox.chat";
 
-function ChatPage() {
+function Chat() {
   return (
     <>
       <div className="antialiased bg-gray-50 dark:bg-gray-900">
-        <Navbar />
-        <Sidebar />
-        <Chat />
+        <NavbarChat />
+        <SidebarChat />
+        <ChatBoxChat />
       </div>
     </>
   );
 }
 
-export default ChatPage;
+export default Chat;

@@ -2,25 +2,22 @@
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 
-/* ::-webkit-scrollbar{
-    width: 10px;
+/* ===== Custom Scrollbar (WebKit) ===== */
+
+::-webkit-scrollbar {
+    width: 5px;
     height: 100vh;
     background-color: #364153;
 }
-::-webkit-scrollbar-button{
-
-}
-::-webkit-scrollbar-corner{
-
-}
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
     background-color: #125398;
     border-radius: 10px;
-    
 }
-::-webkit-scrollbar-track{
-    
 
+::-webkit-scrollbar-track {
+    background-color: #364153;
 }
-::-webkit-scrollbar-track-piece{
-} */
+
+::-webkit-scrollbar-track-piece {
+    background-color: #364153;
+}

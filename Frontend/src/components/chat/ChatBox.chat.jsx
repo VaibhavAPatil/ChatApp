@@ -1,8 +1,9 @@
 import React from "react";
 
-function Chats() {
+function ChatBoxChat() {
   return (
     <>
+      {/* Chat */}
       <main className="p-4 md:ml-64 h-dvh pt-20">
         <div className="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4 p-4">
           {/* Chat Bubble */}
@@ -198,8 +199,9 @@ function Chats() {
           {/*End Chat Bubble */}
         </div>
       </main>
+      {/* Chat */}
     </>
   );
 }
 
-export default Chats;
+export default ChatBoxChat;
