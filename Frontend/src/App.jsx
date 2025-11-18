@@ -1,13 +1,12 @@
-import { useState } from "react";
-import "./App.css";
 import { Routes, Route } from "react-router-dom";
+
+import "./App.css";
 import Login from "./pages/Login";
+import Home from "./pages/Home.jsx";
 import Register from "./pages/Register";
 import ChatPage from "./pages/ChatPage";
-import Home from "./pages/Home.jsx";
 
 function App() {
-  const login = false;
   return (
     <>
       <Routes>
