@@ -1,14 +1,11 @@
 import axios from "axios";
 
-const API = axios.create({
+const axiosInstance = axios.create({
   baseURL: "http://localhost:5000/api",
+  withCredentials: true, // send cookies automatically
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Attch Token to the request
-API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) req.headers.Authorization = `Bearer ${token}`;
-  return req;
-});
-
-export default API;
+export default axiosInstance;

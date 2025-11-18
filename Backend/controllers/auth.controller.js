@@ -10,9 +10,29 @@ const registerUser = async (req, res) => {
     const { fullName, username, email, password, mobileNo, gender } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "User already exists" });
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }, { mobileNo }],
+    });
+
+    // if (existingUser)
+    //   return res.status(400).json({ message: "User already exists" });
+
+    const emailExists = await User.findOne({ email });
+    const usernameExists = await User.findOne({ username });
+    const mobileExists = await User.findOne({ mobileNo });
+
+    const errors = {};
+
+    if (emailExists) errors.email = "Email already exists";
+    if (usernameExists) errors.username = "Username already exists";
+    if (mobileExists) errors.mobileNo = "Mobile number already exists";
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors,
+      });
+    }
 
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);

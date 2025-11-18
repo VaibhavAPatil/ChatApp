@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../config/axios.config"; // Import centralized API config
+import axiosInstance from "../config/axios.config.js"; // Import centralized API config
 
 const Register = () => {
   const [formData, setFormData] = useState({
+    fullName: "",
     username: "",
+    mobileNo: "",
     email: "",
     password: "",
     confirmPassword: "",
+    gender: "",
   });
   const [error, setError] = useState(""); // State for error messages
   const [success, setSuccess] = useState(""); // State for success message
@@ -21,33 +24,54 @@ const Register = () => {
     });
   };
 
-  // ✅ Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    // ✅ Validate Password & Confirm Password Match
+    // Password match
     if (formData.password !== formData.confirmPassword) {
       return setError("Passwords do not match!");
     }
 
+    // Mobile number validation
+    if (formData.mobileNo.length !== 10) {
+      return setError("Mobile number must be 10 digits!");
+    }
+
+    // Gender validation
+    if (!formData.gender) {
+      return setError("Please select your gender!");
+    }
+
     try {
-      const { data } = await axios.post("/auth/register", {
+      const res = await axiosInstance.post("/auth/register", {
+        fullName: formData.fullName,
         username: formData.username,
         email: formData.email,
         password: formData.password,
+        mobileNo: formData.mobileNo,
+        gender: formData.gender,
       });
 
       setSuccess("Account created successfully! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 2000); // Redirect after success
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
+      if (error.response?.data?.errors) {
+        const firstError = Object.values(error.response.data.errors)[0];
+        return setError(firstError); // Show first error
+      }
+
       setError(
         error.response?.data?.message || "Registration failed. Try again."
       );
+
+      // setError(
+      //   error.response?.data?.message || "Registration failed. Try again."
+      // );
     }
 
-    console.log("Form Data:", formData); // Log form data for debugging
+    console.log("Form Data:", formData);
   };
 
   return (
@@ -67,10 +91,30 @@ const Register = () => {
               {error && <p className="text-red-500">{error}</p>}
 
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+                {/* ✅ fullName Input */}
+                <div>
+                  <label
+                    htmlFor="fullName"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    id="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="fullName"
+                    required
+                  />
+                </div>
+
                 {/* ✅ usernmae Input */}
                 <div>
                   <label
-                    htmlFor="email"
+                    htmlFor="username"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Username
@@ -83,6 +127,26 @@ const Register = () => {
                     onChange={handleChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="username"
+                    required
+                  />
+                </div>
+
+                {/* ✅ MobileNo Input */}
+                <div>
+                  <label
+                    htmlFor="mobileNo"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    mobileNo
+                  </label>
+                  <input
+                    type="text"
+                    name="mobileNo"
+                    id="mobileNo"
+                    value={formData.mobileNo}
+                    onChange={handleChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="9999999999"
                     required
                   />
                 </div>
@@ -145,6 +209,37 @@ const Register = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                   />
+                </div>
+
+                {/* Gender Input */}
+                <div>
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Gender
+                  </label>
+
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="male"
+                        checked={formData.gender === "male"}
+                        onChange={handleChange}
+                      />
+                      <span>Male</span>
+                    </label>
+
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="female"
+                        checked={formData.gender === "female"}
+                        onChange={handleChange}
+                      />
+                      <span>Female</span>
+                    </label>
+                  </div>
                 </div>
 
                 {/* ✅ Terms Checkbox */}
