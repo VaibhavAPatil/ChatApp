@@ -7,7 +7,7 @@ dotenv.config();
 
 const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { fullName, username, email, password, mobileNo, gender } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -16,12 +16,20 @@ const registerUser = async (req, res) => {
 
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({
+      fullName,
+      username,
+      email,
+      password: hashedPassword,
+      mobileNo,
+      gender,
+    });
 
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Register Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -39,11 +47,23 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
 
     // Generate JWT Token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, userName: user.username },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
 
-    res.json({ token, userId: user._id });
+    // Set Cookie
+    res.cookie("token", token, {
+      httpOnly: true, // prevents JS access (secure)
+      secure: false, // true only for https
+      sameSite: "lax", // CSRF protection
+      maxAge: 1 * 60 * 60 * 1000, // 1 hour
+    });
+    // send Json response
+    res.json({ token, userId: user._id, userName: user.username });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
