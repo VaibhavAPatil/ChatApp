@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
 import dotenv from "dotenv";
+
+import User from "../models/user.model.js";
 
 dotenv.config();
 
@@ -83,10 +84,29 @@ const loginUser = async (req, res) => {
       maxAge: 1 * 60 * 60 * 1000, // 1 hour
     });
     // send Json response
-    res.json({ token, userId: user._id, userName: user.username });
+    res.json({
+      message: "Login successful",
+      user: { id: user._id, username: user.username, email: user.email },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-export { registerUser, loginUser };
+// ⭐ NEW: Persistent Login Route
+const getLoggedInUser = async (req, res) => {
+  try {
+    const token = req.cookies?.token;
+
+    if (!token) return res.status(401).json({ loggedIn: false });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId).select("-password");
+
+    res.json({ loggedIn: true, user });
+  } catch (error) {
+    return res.status(401).json({ loggedIn: false });
+  }
+};
+
+export { registerUser, loginUser, getLoggedInUser };

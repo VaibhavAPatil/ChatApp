@@ -21,8 +21,10 @@ const Login = () => {
     setError(""); // Clear previous errors
 
     try {
-      const { data } = await axios.post("/auth/login", formData);
-      localStorage.setItem("token", data.token); // Store token
+      const { data } = await axios.post("/auth/login", formData, {
+        withCredentials: true,
+      });
+      localStorage.setItem("loggedIn", "true");
       navigate("/chat"); // Redirect to chats
     } catch (error) {
       setError(error.response?.data?.message || "Login failed.");
