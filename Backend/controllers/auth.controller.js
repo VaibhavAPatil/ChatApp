@@ -28,16 +28,22 @@ const registerUser = async (req, res) => {
     });
 
     if (existingUser) {
-      let conflictField = "";
+      let conflicts = [];
 
-      if (existingUser.email === email) conflictField = "Email";
-      else if (existingUser.username === username) conflictField = "Username";
-      else if (existingUser.mobileNo === mobileNo)
-        conflictField = "Mobile number";
+      if (existingUser.email?.toLowerCase() === email.toLowerCase())
+        conflicts.push("Email");
+
+      if (existingUser.username?.toLowerCase() === username.toLowerCase())
+        conflicts.push("Username");
+
+      // if (existingUser.mobileNo === mobileNo) conflicts.push("Mobile number");
+      if (Number(existingUser.mobileNo) === Number(mobileNo)) {
+        conflicts.push("Mobile number");
+      }
 
       return res.status(400).json({
         success: false,
-        message: `${conflictField} already exists`,
+        message: `${conflicts.join(" & ")} already exists`,
       });
     }
 
