@@ -5,6 +5,7 @@ import axios from "../config/axios.config"; // Use centralized API config
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState(""); // State for error messages
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   // ✅ Handle Input Changes
@@ -76,7 +77,7 @@ const Login = () => {
               </div>
 
               {/* ✅ Password Input */}
-              <div>
+              <div className="relative">
                 <label
                   htmlFor="password"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -84,7 +85,7 @@ const Login = () => {
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   id="password"
                   value={formData.password}
@@ -93,6 +94,17 @@ const Login = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required
                 />
+                <button
+                  type="button"
+                  className="absolute right-3 top-10 text-gray-500 dark:text-gray-300"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword
+                    ? // Hide Icon
+                      "🫣"
+                    : // Show Icon
+                      "👁️"}
+                </button>
               </div>
 
               {/* ✅ Remember Me Checkbox & Forgot Password */}
