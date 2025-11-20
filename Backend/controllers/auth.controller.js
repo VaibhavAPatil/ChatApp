@@ -8,35 +8,48 @@ dotenv.config();
 
 const registerUser = async (req, res) => {
   try {
-    const { fullName, username, email, password, mobileNo, gender } = req.body;
+    const {
+      fullName,
+      username,
+      email,
+      password,
+      confirmPassword,
+      mobileNo,
+      gender,
+    } = req.body;
+
+    if (!fullName || !username || !email || !password || !mobileNo || !gender) {
+      return res.status(400).json({ message: "All feilds are required" });
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }, { mobileNo }],
     });
 
-    // if (existingUser)
-    //   return res.status(400).json({ message: "User already exists" });
+    if (existingUser) {
+      let conflictField = "";
 
-    const emailExists = await User.findOne({ email });
-    const usernameExists = await User.findOne({ username });
-    const mobileExists = await User.findOne({ mobileNo });
+      if (existingUser.email === email) conflictField = "Email";
+      else if (existingUser.username === username) conflictField = "Username";
+      else if (existingUser.mobileNo === mobileNo)
+        conflictField = "Mobile number";
 
-    const errors = {};
-
-    if (emailExists) errors.email = "Email already exists";
-    if (usernameExists) errors.username = "Username already exists";
-    if (mobileExists) errors.mobileNo = "Mobile number already exists";
-
-    if (Object.keys(errors).length > 0) {
       return res.status(400).json({
-        message: "Validation failed",
-        errors,
+        success: false,
+        message: `${conflictField} already exists`,
       });
+    }
+
+    // Paasword Match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Password dont match" });
     }
 
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // create a new user
     const newUser = new User({
       fullName,
       username,
@@ -46,6 +59,7 @@ const registerUser = async (req, res) => {
       gender,
     });
 
+    // Save User
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
@@ -54,6 +68,7 @@ const registerUser = async (req, res) => {
   }
 };
 
+// Login
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
