@@ -49,12 +49,15 @@ const registerUser = async (req, res) => {
 
     // Paasword Match
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Password dont match" });
+      return res.status(400).json({ message: "Password did not match" });
     }
 
     // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // ProfilePhot
+    const maleProfilePic = `https://avatar/iran.liara.run/public/boy?username=${username}`;
+    const femaleProfilePic = `https://avatar/iran.liara.run/public/boy?username=${username}`;
     // create a new user
     const newUser = new User({
       fullName,
@@ -63,6 +66,7 @@ const registerUser = async (req, res) => {
       password: hashedPassword,
       mobileNo,
       gender,
+      profilePic: gender === "male" ? maleProfilePic : femaleProfilePic,
     });
 
     // Save User
