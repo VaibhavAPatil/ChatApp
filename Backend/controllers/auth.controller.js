@@ -83,6 +83,10 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).json({ message: "All feilds are required" });
+    }
+
     // Check if user exists
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
@@ -97,7 +101,7 @@ const loginUser = async (req, res) => {
       { userId: user._id, userName: user.username },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "1d",
       }
     );
 
@@ -106,7 +110,7 @@ const loginUser = async (req, res) => {
       httpOnly: true, // prevents JS access (secure)
       secure: false, // true only for https
       sameSite: "lax", // CSRF protection
-      maxAge: 1 * 60 * 60 * 1000, // 1 hour
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
     });
     // send Json response
     res.json({
@@ -115,6 +119,18 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+// logout
+const logoutUser = (req, res) => {
+  try {
+    return res
+      .status(200)
+      .cookie("token", "", { maxAge: 0 })
+      .json({ message: "Logged Out Succesfully" });
+  } catch (error) {
+    return res.status(500).josn({ message: "Server Error" });
   }
 };
 
@@ -134,4 +150,17 @@ const getLoggedInUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, getLoggedInUser };
+// get ALl Users
+const getAllUsers = async (req, res) => {
+  try {
+    const LoggedInUserId = req.id;
+    const otherUsers = await User.find({ _id: { $ne: LoggedInUserId } }).select(
+      "-password"
+    );
+    return res.status(200).json(otherUsers);
+  } catch (error) {
+    res.json({ error, message: error.message });
+  }
+};
+
+export { registerUser, loginUser, logoutUser, getLoggedInUser, getAllUsers };
