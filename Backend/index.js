@@ -34,10 +34,6 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.post("/hello", (req, res) => {
-  res.send("Hello Hello");
-});
-
 // 6. Connect to DB Note: Used Iffe
 (async () => {
   try {
